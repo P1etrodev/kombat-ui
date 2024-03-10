@@ -1,9 +1,10 @@
-import { Ability, Keystone } from "./ddata"
+import { Ability, Keystone } from "@/types/ddata"
 
-export const getChampIcon = (championName: string) => {
-    championName = championName.replace(' ', '').replace("'", '')
-    if (championName == 'BelVeth') championName = 'Belveth'
-    return `https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${championName}.png`
+import { getCleanRawChampName } from "./tools"
+
+export const getChampIcon = (rawChampName: string | undefined) => {
+    rawChampName = getCleanRawChampName(rawChampName)
+    return `https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${rawChampName}.png`
 }
 
 export const getLoadingImg = (rawSkinName: string) => {
@@ -52,4 +53,12 @@ export const getKeystoneIcon = (keystone: Keystone | undefined, primaryRuneTree:
 export const getRuneTreeIcon = (runeTree: Keystone | undefined): string => {
     const primaryDisplay = runeTree?.displayName.replace(' ', '')
     return `/runes/${primaryDisplay}.png`
+}
+
+export const getSpellIcon = (spellImg: string | undefined): string => {
+    return `https://ddragon.leagueoflegends.com/cdn/14.5.1/img/spell/${spellImg}`
+}
+
+export const getPassiveIcon = (passiveImgUrl: string | undefined): string => {
+    return `https://ddragon.leagueoflegends.com/cdn/14.5.1/img/passive/${passiveImgUrl}`
 }

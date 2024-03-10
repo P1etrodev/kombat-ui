@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-
+@import 'https://fonts.googleapis.com/css?family=Roboto+Slab:400,700';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,4 +10,25 @@
 
 * {
     font-family: "Noto Sans", sans-serif;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    @apply bg-dark;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: main;
 }

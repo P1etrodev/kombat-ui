@@ -1,10 +1,38 @@
+<template>
+    <Winner :winner="winner" :win-condition="winCondition"></Winner>
+    <div class="flex flex-col max-h-screen gap-4 p-4">
+        <div class="sticky top-0 left-0 z-40 grid w-full grid-cols-5 p-4 h-fit bg-semi flex-nowrap rounded-b-md">
+            <HomeButton></HomeButton>
+            <div class="flex flex-row w-full gap-1 pr-4 my-auto rounded-md flex-nowrap bg-dark">
+                <img class="h-16 aspect-square" src="/minion.png">
+                <h1 class="my-auto text-3xl font-normal text-yellow-200 h-fit w-fit">{{ bluePlayer?.scores?.creepScore
+        || 0 }} </h1>
+            </div>
+            <h1 class="flex flex-row m-auto text-6xl *:text-white *:bg-dark *:py-1 *:px-2 *:rounded-lg gap-2">
+                <h1>{{ timer.minutes }}</h1>
+                <h1>{{ timer.seconds }}</h1>
+            </h1>
+            <div class="flex flex-row-reverse w-full gap-1 pr-4 my-auto rounded-md flex-nowrap bg-dark">
+                <img class="h-16 aspect-square" src="/minion.png">
+                <h1 class="my-auto text-3xl font-normal text-yellow-200 h-fit w-fit">{{ redPlayer?.scores?.creepScore ||
+        0 }} </h1>
+            </div>
+        </div>
+        <div class="grid w-full max-h-full grid-cols-2 gap-2">
+            <InfoPlayer v-model="bluePlayer"></InfoPlayer>
+            <InfoPlayer v-model="redPlayer"></InfoPlayer>
+        </div>
+    </div>
+</template>
 <script async setup lang="ts">
 import { Ref, reactive, ref } from 'vue'
-import type { Event, GameData, Player } from '@/ddata'
+import type { Event, GameData, Item, Player } from '@/types/ddata'
 import { formatSeconds } from '@/tools';
 import axios from "axios"
-import { Timer } from '@/custom'
-import HomeButton from '@/components/HomeButton.vue'
+import { Timer } from '@/types/custom'
+import HomeButton from '#/HomeButton.vue'
+import InfoPlayer from '#/info/InfoPlayer.vue'
+import Winner from '#/Winner.vue'
 
 const indexes = {
     blueIndex: 0,
@@ -27,6 +55,9 @@ const timer: Timer = reactive({
 axios.get('/api/playerlist')
     .then(res => {
         const playerList: Player[] = res.data
+        playerList.map((p) => {
+            p.items = p.items?.filter((e: Item) => e.slot !== 6)
+        })
         const blueIndex = playerList.length <= 2 ? indexes.blueIndex : indexes.blueTeamIndex
         const redIndex = playerList.length <= 2 ? indexes.redIndex : indexes.redTeamIndex
         bluePlayer = reactive(playerList[blueIndex])
@@ -105,7 +136,7 @@ setInterval(() => {
                 }
                 bluePlayer.isDead = bluePlayerTemporal.isDead
                 bluePlayer.level = bluePlayerTemporal.level
-                bluePlayer.items = bluePlayerTemporal.items
+                bluePlayer.items = bluePlayerTemporal.items?.filter((e: Item) => e.slot !== 6)
                 bluePlayer.respawnTimer = bluePlayerTemporal.respawnTimer
                 bluePlayer.scores = bluePlayerTemporal.scores
             } else {
@@ -119,7 +150,7 @@ setInterval(() => {
                 }
                 redPlayer.isDead = redPlayerTemporal.isDead
                 redPlayer.level = redPlayerTemporal.level
-                redPlayer.items = redPlayerTemporal.items
+                redPlayer.items = redPlayerTemporal.items?.filter((e: Item) => e.slot !== 6)
                 redPlayer.respawnTimer = redPlayerTemporal.respawnTimer
                 if (redPlayer.scores) {
                     redPlayer.scores.creepScore = redPlayerTemporal.scores?.creepScore || 0
@@ -140,8 +171,3 @@ setInterval(() => {
 }, 1000)
 
 </script>
-<template>
-    <div class="w-full m-8">
-        <HomeButton />
-    </div>
-</template>

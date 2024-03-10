@@ -1,11 +1,40 @@
+<template>
+    <Winner :winner="winner" :win-condition="winCondition"></Winner>
+    <div class="flex flex-col justify-between min-h-screen">
+        <div class="flex justify-center">
+            <div
+                class="flex flex-row items-center gap-2 p-4 border-b-2 border-x-2 bg-semi border-primary flex-nowrap rounded-b-xl w-fit">
+                <PlayerViz v-model="bluePlayer" :mirrored="true"></PlayerViz>
+                <h1 class="flex flex-row mx-2 text-3xl *:text-primary *:bg-dark *:p-1 *:rounded-lg gap-1">
+                    <h1>{{ timer.minutes }}</h1>
+                    <h1>{{ timer.seconds }}</h1>
+                </h1>
+                <PlayerViz v-model="redPlayer"></PlayerViz>
+            </div>
+        </div>
+        <div class="flex flex-row justify-between w-full h-52 *:relative flex-nowrap *:h-full *:aspect-video">
+            <div v-for="n in 3" class="border-2 border-primary" :class="{
+        'rounded-tr-lg': n === 1,
+        'rounded-t-lg': n === 2,
+        'rounded-tl-lg': n === 3
+    }">
+                <div class="w-full h-full border-[12px] border-semi" :class="{
+        'rounded-tr-lg': n === 1,
+        'rounded-t-lg': n === 2,
+        'rounded-tl-lg': n === 3
+    }"></div>
+            </div>
+        </div>
+    </div>
+</template>
 <script async setup lang="ts">
 import { Ref, reactive, ref } from 'vue'
-import type { Event, GameData, Player } from '@/ddata'
+import type { Event, GameData, Item, Player } from '@/types/ddata'
 import { formatSeconds } from '@/tools';
-import PlayerViz from '#/overlay/PlayerViz.vue';
-import Winner from '#/overlay/Winner.vue';
+import PlayerViz from '#/overlay/OverlayPlayer.vue';
+import Winner from '#/Winner.vue';
 import axios from "axios"
-import { Timer } from '@/custom'
+import { Timer } from '@/types/custom'
 
 const indexes = {
     blueIndex: 0,
@@ -106,7 +135,7 @@ setInterval(() => {
                 }
                 bluePlayer.isDead = bluePlayerTemporal.isDead
                 bluePlayer.level = bluePlayerTemporal.level
-                bluePlayer.items = bluePlayerTemporal.items
+                bluePlayer.items = bluePlayerTemporal.items?.filter((e: Item) => e.slot !== 6)
                 bluePlayer.respawnTimer = bluePlayerTemporal.respawnTimer
                 bluePlayer.scores = bluePlayerTemporal.scores
             } else {
@@ -120,7 +149,7 @@ setInterval(() => {
                 }
                 redPlayer.isDead = redPlayerTemporal.isDead
                 redPlayer.level = redPlayerTemporal.level
-                redPlayer.items = redPlayerTemporal.items
+                redPlayer.items = redPlayerTemporal.items?.filter((e: Item) => e.slot !== 6)
                 redPlayer.respawnTimer = redPlayerTemporal.respawnTimer
                 if (redPlayer.scores) {
                     redPlayer.scores.creepScore = redPlayerTemporal.scores?.creepScore || 0
@@ -141,16 +170,3 @@ setInterval(() => {
 }, 1000)
 
 </script>
-<template>
-    <Winner :winner="winner" :win-condition="winCondition"></Winner>
-    <div class="flex justify-center">
-        <div class="flex flex-row items-center gap-2 p-4 bg-semi flex-nowrap rounded-b-xl w-fit">
-            <PlayerViz :player="bluePlayer" :mirrored="true"></PlayerViz>
-            <h1 class="flex flex-row mx-2 text-3xl *:text-primary *:bg-dark *:p-1 *:rounded-lg gap-1">
-                <h1>{{ timer.minutes }}</h1>
-                <h1>{{ timer.seconds }}</h1>
-            </h1>
-            <PlayerViz :player="redPlayer"></PlayerViz>
-        </div>
-    </div>
-</template>

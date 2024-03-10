@@ -1,6 +1,6 @@
 <template>
     <router-link
-        class="absolute top-0 left-0 m-2 p-4 border-2 border-primary rounded-md hover:bg-primary transition ease-in-out duration-[0.3s] font-semibold text-white hover:text-dark text-center"
+        class="p-4 border-2 w-fit h-fit my-auto border-primary rounded-md hover:bg-primary transition ease-in-out duration-[0.3s] font-semibold text-white hover:text-dark text-center"
         to="/"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round"

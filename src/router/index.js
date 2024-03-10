@@ -16,7 +16,7 @@ const routes = [
   {
     path: '/info',
     component: InfoView
-  },
+  }
 ]
 
 const router = createRouter({
